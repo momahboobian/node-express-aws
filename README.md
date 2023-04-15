@@ -26,9 +26,9 @@ app.get('/', (req, res) => {
  const date = new Date();
  res.send(Current time is ${date.toLocaleString()} and number of visitors is ${visitors});
 });
-```
 
 app.listen(3000, () => console.log('Server started on port 3000'));
+```
 
 - [ ] Save the `index.js` file.
 
