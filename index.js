@@ -5,6 +5,18 @@ const PORT = 3000 || process.env.PORT;
 
 const fs = require("fs");
 
+const os = require("os");
+
+const interfaces = os.networkInterfaces();
+let ip;
+Object.keys(interfaces).forEach((iface) => {
+  interfaces[iface].forEach((ifaceInfo) => {
+    if (ifaceInfo.family === "IPv4" && !ifaceInfo.internal) {
+      ip = ifaceInfo.address;
+    }
+  });
+});
+
 function getCurrentTime() {
   const date = new Date();
   const options = {
@@ -66,4 +78,6 @@ app.get("/", (req, res) => {
 
 app.use(express.static("public"));
 
-app.listen(PORT, () => console.log("Server start listening..."));
+app.listen(PORT, () =>
+  console.log(`Server started and listening http://${ip}:${PORT}`)
+);
