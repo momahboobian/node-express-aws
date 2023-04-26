@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
 
-const PORT = 3000 || process.env.PORT;
+const PORT = 4000 || process.env.PORT;
+
+const path = require("path");
+const filePath = path.join(__dirname, "visitors.txt");
 
 const fs = require("fs");
 
@@ -31,17 +34,19 @@ function getCurrentTime() {
   return date.toLocaleString("en-US", options);
 }
 
+app.use(express.static(__dirname + "/public"));
+
 app.get("/time", (req, res) => {
   const currentTime = getCurrentTime();
   res.send(currentTime);
 });
 
 app.get("/", (req, res) => {
-  fs.readFile("visitors.txt", (err, data) => {
+  fs.readFile(filePath, (err, data) => {
     if (err) throw err;
     let visitors = parseInt(data);
     visitors++;
-    fs.writeFile("visitors.txt", visitors.toString(), (err) => {
+    fs.writeFile(filePath, visitors.toString(), (err) => {
       if (err) throw err;
       const currentTime = getCurrentTime();
       res.send(`
@@ -52,7 +57,7 @@ app.get("/", (req, res) => {
           </head>
           <body>
             <h1>Welcome to my website</h1>
-           
+
             <p>Current time is <span id="time">${currentTime}</span></p>
             <p>And you are visitor number <span id="visitors">${visitors}</span></p>
             <span id="thanks">Thank you for visiting!</span>
